@@ -1,34 +1,89 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="utf-8"/>
+  <meta charset="utf-8" />
   <title>Shell Recharge Laadstations</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 40px; background:#f7f8fa; }
-    h1 { color:#003366; }
-
-    .card {
-      background:#fff;
-      padding:18px;
-      border-radius:10px;
-      box-shadow:0 2px 6px rgba(0,0,0,0.08);
-      margin-bottom:16px;
-      max-width:800px;
+    body {
+      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+      background: #f4f7fa;
+      color: #333;
+      margin: 40px auto;
+      max-width: 900px;
     }
 
-    .label { font-weight:bold; }
+    h1 {
+      text-align: center;
+      color: #003366;
+      margin-bottom: 30px;
+    }
 
-    /* Statuskleuren in het Nederlands */
-    .status { padding:6px 10px; border-radius:6px; display:inline-block; margin-top:6px; font-weight:bold; }
-    .Beschikbaar { background:#c8f7c5; color:#1b5e20; }        /* Groen */
-    .Bezet { background:#f8c0c0; color:#b71c1c; }              /* Rood */
-    .Bezig\ met\ laden { background:#fbe7a1; color:#795548; }  /* Geel */
-    .Niet\ beschikbaar { background:#ddd; color:#555; }         /* Grijs */
-    .Defect { background:#e6b0b0; color:#7b0000; }              /* Donkerrood */
-    .Onbekend { background:#ccc; color:#333; }                  /* Lichtgrijs */
+    .card {
+      background: #fff;
+      padding: 20px 24px;
+      border-radius: 12px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+      margin-bottom: 20px;
+    }
 
-    .error { color:#b71c1c; font-weight:bold; }
-    .timestamp { color:#555; font-size:0.9em; }
+    .address {
+      font-size: 1.2em;
+      font-weight: 600;
+      color: #002b5c;
+      margin-bottom: 12px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px 20px;
+      align-items: center;
+      border-top: 1px solid #eee;
+      padding-top: 10px;
+      margin-top: 8px;
+    }
+
+    .label {
+      font-weight: 500;
+      color: #555;
+    }
+
+    .status {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      display: inline-block;
+      text-align: center;
+      min-width: 120px;
+    }
+
+    /* Nederlandse statuskleuren */
+    .Beschikbaar { background: #e0f8e0; color: #1b5e20; }
+    .Bezet { background: #fde0e0; color: #b71c1c; }
+    .Bezig\ met\ laden { background: #fff4cc; color: #795548; }
+    .Niet\ beschikbaar { background: #e6e6e6; color: #555; }
+    .Defect { background: #f8caca; color: #7b0000; }
+    .Onbekend { background: #ddd; color: #333; }
+
+    .timestamp {
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    .error {
+      color: #b71c1c;
+      font-weight: bold;
+      text-align: center;
+      background: #ffe5e5;
+      padding: 10px;
+      border-radius: 6px;
+    }
+
+    @media (max-width: 700px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
@@ -40,8 +95,9 @@
       try {
         const res = await fetch('/api/location.js');
         if (!res.ok) {
-          const body = await res.json().catch(()=>null);
-          document.getElementById('stations').innerHTML = `<div class="error">API-fout: ${res.status} ${res.statusText} — ${body?.error || ''}</div>`;
+          const body = await res.json().catch(() => null);
+          document.getElementById('stations').innerHTML =
+            `<div class="error">API-fout: ${res.status} ${res.statusText} — ${body?.error || ''}</div>`;
           return;
         }
 
@@ -49,16 +105,22 @@
         const container = document.getElementById('stations');
         container.innerHTML = stations.map(s => `
           <div class="card">
-            <div><span class="label">Adres:</span> ${s.address}</div>
-            <div><span class="label">EVSE 1 status:</span> <span class="status ${s.evse_1_status}">${s.evse_1_status}</span></div>
-            <div><span class="label">EVSE 1 laatst bijgewerkt:</span> <span class="timestamp">${s.evse_1_updated}</span></div>
-            <div style="margin-top:8px;"><span class="label">EVSE 2 status:</span> <span class="status ${s.evse_2_status}">${s.evse_2_status}</span></div>
-            <div><span class="label">EVSE 2 laatst bijgewerkt:</span> <span class="timestamp">${s.evse_2_updated}</span></div>
+            <div class="address">${s.address}</div>
+            <div class="grid">
+              <div class="label">Type 2 Connector 1</div>
+              <div class="status ${s.evse_1_status}">${s.evse_1_status}</div>
+              <div class="timestamp">${s.evse_1_updated}</div>
+
+              <div class="label">Type 2 Connector 2</div>
+              <div class="status ${s.evse_2_status}">${s.evse_2_status}</div>
+              <div class="timestamp">${s.evse_2_updated}</div>
+            </div>
           </div>
         `).join('');
       } catch (err) {
         console.error(err);
-        document.getElementById('stations').innerHTML = `<div class="error">Fout bij ophalen data: ${err.message}</div>`;
+        document.getElementById('stations').innerHTML =
+          `<div class="error">Fout bij ophalen data: ${err.message}</div>`;
       }
     }
 
