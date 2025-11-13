@@ -23,7 +23,7 @@
   <script>
     async function init() {
       try {
-        const res = await fetch('/api/locations');
+        const res = await fetch('/api/location.js');
         if (!res.ok) {
           const body = await res.json().catch(()=>null);
           document.getElementById('stations').innerHTML = `<div class="error">API-fout: ${res.status} ${res.statusText} — ${body?.error || ''}</div>`;
