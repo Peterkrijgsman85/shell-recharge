@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Shell Recharge Locatie</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    .card {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 400px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h1 { font-size: 1.4rem; }
+    .label { font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <h1>Shell Recharge Locatie-informatie</h1>
+
+  <div id="info" class="card">
+    <p>Laden...</p>
+  </div>
+
+  <script>
+    const id = 4452657;
+    // Gebruik de relatieve API-route (werkt automatisch op Vercel)
+    const apiUrl = `/api/location?id=${id}`;
+
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("info").innerHTML = `
+          <p><span class="label">Naam:</span> ${data.name}</p>
+          <p><span class="label">UID:</span> ${data.uid}</p>
+        `;
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById("info").textContent =
+          "Kon de locatiegegevens niet laden.";
+      });
+  </script>
+
+</body>
+</html>
