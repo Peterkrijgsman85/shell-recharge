@@ -1,115 +1,53 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8"/>
   <title>Shell Recharge Laadstations</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 40px;
-      background: #f7f8fa;
-    }
-    h1 {
-      font-size: 1.8rem;
-      margin-bottom: 30px;
-      color: #003366;
-    }
-    .card {
-      background: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      max-width: 600px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-      margin-bottom: 25px;
-    }
-    .label {
-      font-weight: bold;
-      color: #333;
-    }
-    .status {
-      padding: 6px 10px;
-      border-radius: 8px;
-      display: inline-block;
-      margin-top: 4px;
-      font-weight: bold;
-    }
-    .AVAILABLE {
-      background: #c8f7c5;
-      color: #1b5e20;
-    }
-    .CHARGING {
-      background: #fbe7a1;
-      color: #795548;
-    }
-    .OUTOFORDER, .UNKNOWN {
-      background: #f8c0c0;
-      color: #b71c1c;
-    }
-    .timestamp {
-      color: #555;
-      font-size: 0.9em;
-    }
+    body { font-family: Arial, sans-serif; margin: 40px; background:#f7f8fa; }
+    h1 { color:#003366; }
+    .card { background:#fff; padding:18px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.08); margin-bottom:16px; max-width:800px;}
+    .label { font-weight:bold; }
+    .status { padding:6px 10px; border-radius:6px; display:inline-block; margin-top:6px; font-weight:bold; }
+    .AVAILABLE { background:#c8f7c5; color:#1b5e20; }
+    .CHARGING { background:#fbe7a1; color:#795548; }
+    .UNAVAILABLE, .UNKNOWN, .OUTOFORDER { background:#f8c0c0; color:#b71c1c; }
+    .error { color:#b71c1c; font-weight:bold; }
+    .timestamp { color:#555; font-size:0.9em; }
   </style>
 </head>
 <body>
-
   <h1>Shell Recharge Laadstations</h1>
-  <div id="stations">Laden...</div>
+  <div id="stations">Laden…</div>
 
   <script>
-    function formatDate(isoString) {
-  if (!isoString || isoString === "Onbekend") return "Onbekend";
-  try {
-    const date = new Date(isoString);
-    const formatter = new Intl.DateTimeFormat('nl-NL', {
-      timeZone: 'Europe/Amsterdam',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    });
-    return formatter.format(date);
-  } catch (e) {
-    console.error('Datumfout:', e);
-    return isoString;
-  }
-}
+    async function init() {
+      try {
+        const res = await fetch('/api/locations');
+        if (!res.ok) {
+          const body = await res.json().catch(()=>null);
+          document.getElementById('stations').innerHTML = `<div class="error">API-fout: ${res.status} ${res.statusText} — ${body?.error || ''}</div>`;
+          return;
+        }
 
-    const apiUrl = '/api/location.js'; // Vercel API endpoint
-
-    function renderStatus(status) {
-      return `<span class="status ${status}">${status}</span>`;
-    }
-
-    fetch(apiUrl)
-      .then(res => res.json())
-      .then(stations => {
+        const stations = await res.json();
         const container = document.getElementById('stations');
-        container.innerHTML = stations.map(st => `
+        container.innerHTML = stations.map(s => `
           <div class="card">
-            <p><span class="label">Naam:</span> ${st.name}</p>
-            <p>
-              <span class="label">EVSE 1 status:</span> ${renderStatus(st.evse_1_status)}<br>
-              <span class="label">Laatst bijgewerkt:</span>
-              <span class="timestamp">${formatDate(s.evse_1_updated)}</span>
-            </p>
-            <p>
-              <span class="label">EVSE 2 status:</span> ${renderStatus(st.evse_2_status)}<br>
-              <span class="label">Laatst bijgewerkt:</span>
-              <span class="timestamp">${formatDate(s.evse_2_updated)}</span>
-
-            </p>
+            <div><span class="label">Adres:</span> ${s.address}</div>
+            <div><span class="label">EVSE 1 status:</span> <span class="status ${s.evse_1_status}">${s.evse_1_status}</span></div>
+            <div><span class="label">EVSE 1 laatst bijgewerkt:</span> <span class="timestamp">${s.evse_1_updated}</span></div>
+            <div style="margin-top:8px;"><span class="label">EVSE 2 status:</span> <span class="status ${s.evse_2_status}">${s.evse_2_status}</span></div>
+            <div><span class="label">EVSE 2 laatst bijgewerkt:</span> <span class="timestamp">${s.evse_2_updated}</span></div>
           </div>
         `).join('');
-      })
-      .catch(err => {
+      } catch (err) {
         console.error(err);
-        document.getElementById('stations').textContent =
-          'Kon de gegevens niet laden.';
-      });
-  </script>
+        document.getElementById('stations').innerHTML = `<div class="error">Fout bij ophalen data: ${err.message}</div>`;
+      }
+    }
 
+    init();
+  </script>
 </body>
 </html>
