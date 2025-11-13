@@ -3,67 +3,74 @@
 <head>
   <meta charset="utf-8" />
   <title>Shell Recharge Laadstations ⚡</title>
+
   <!-- Emoji favicon -->
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='50%' x='50%' dominant-baseline='middle' text-anchor='middle' font-size='52'>⚡</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><text y='50%' x='50%' dominant-baseline='middle' text-anchor='middle' font-size='52'>⚡</text></svg>">
 
   <style>
     body {
       font-family: 'Segoe UI', Roboto, Arial, sans-serif;
       background: #f4f7fa;
       color: #333;
-      margin: 40px auto;
+      margin: 20px auto;
+      width: 95%;
       max-width: 600px;
     }
 
     h1 {
       text-align: center;
       color: #003366;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
+      font-size: 1.6em;
+    }
+
+    h1 span {
+      font-size: 1.2em;
+      margin-right: 8px;
     }
 
     .card {
       background: #fff;
-      padding: 22px 26px;
+      padding: 18px 20px;
       border-radius: 12px;
       box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .address {
-      font-size: 1.2em;
+      font-size: 1.15em;
       font-weight: 600;
       color: #002b5c;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
 
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 12px 20px;
+      gap: 10px 12px;
       align-items: center;
       border-top: 1px solid #eee;
-      padding-top: 14px;
+      padding-top: 10px;
     }
 
     .connector-icon {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       font-weight: 500;
       color: #444;
       font-size: 1.1em;
     }
 
     .status {
-      padding: 6px 12px;
+      padding: 5px 10px;
       border-radius: 8px;
       font-weight: 600;
       display: inline-block;
       text-align: center;
-      min-width: 120px;
+      min-width: 100px;
     }
 
-    /* Nederlandse statuskleuren */
     .Beschikbaar { background: #e0f8e0; color: #1b5e20; }
     .Bezet { background: #fde0e0; color: #b71c1c; }
     .Bezig\ met\ laden { background: #fff4cc; color: #795548; }
@@ -72,7 +79,7 @@
     .Onbekend { background: #ddd; color: #333; }
 
     .timestamp {
-      font-size: 0.9em;
+      font-size: 0.85em;
       color: #666;
     }
 
@@ -87,20 +94,29 @@
 
     #lastUpdate {
       text-align: center;
-      font-size: 0.9em;
+      font-size: 0.85em;
       color: #666;
-      margin-top: 20px;
+      margin-top: 15px;
     }
 
-    @media (max-width: 700px) {
+    /* Mobiel: grid stapelen */
+    @media (max-width: 500px) {
       .grid {
         grid-template-columns: 1fr;
+        gap: 8px 0;
+      }
+      .connector-icon {
+        font-size: 1.2em;
+      }
+      .status {
+        min-width: auto;
+        width: 100%;
       }
     }
   </style>
 </head>
 <body>
-  <h1>⚡ Shell Recharge Laadstations ⚡</h1>
+  <h1><span>⚡</span>Shell Recharge Laadstations</h1>
   <div id="stations">Laden…</div>
   <div id="lastUpdate"></div>
 
@@ -134,7 +150,7 @@
           </div>
         `).join('');
 
-        // Toon laatste update
+        // Laatste update tijd
         const now = new Date();
         const formatter = new Intl.DateTimeFormat('nl-NL', {
           timeZone: 'Europe/Amsterdam',
