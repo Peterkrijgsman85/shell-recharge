@@ -1,6 +1,6 @@
 // api/locations.js
 export default async function handler(req, res) {
-  const ids = [5036306, 4452657, 3302883];
+  const ids = [5036306, 5033623, 4452657, 3302883];
 
   const fetchOptions = {
     headers: {
