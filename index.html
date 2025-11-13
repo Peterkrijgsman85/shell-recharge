@@ -17,28 +17,39 @@
       margin: 0;
       padding: 5px;
       width: 100%;
-      max-width: 600px; /* Voor grote schermen */
+      max-width: 600px; 
       box-sizing: border-box;
     }
 
     h1 {
       text-align: center;
       color: #003366;
-      margin: 15px 0;
+      margin: 15px 0 25px 0;
       font-size: 1.6em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
+    /* Pulse animatie voor ⚡ */
     h1 span {
-      font-size: 1.2em;
+      font-size: 1.3em;
       margin-right: 8px;
+      display: inline-block;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
     }
 
     /* Kaarten */
     .card {
       background: #fff;
-      padding: 14px 16px;
+      padding: 16px;
       border-radius: 12px;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.08);
       margin-bottom: 16px;
     }
 
@@ -50,14 +61,13 @@
       word-wrap: break-word;
     }
 
-    /* Grid */
-    .grid {
+    /* Connector rij */
+    .connector-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      gap: 8px;
+      grid-template-columns: 1fr auto auto; /* icon | status | timestamp */
+      gap: 10px 12px;
       align-items: center;
-      border-top: 1px solid #eee;
-      padding-top: 10px;
+      margin-bottom: 8px;
     }
 
     .connector-icon {
@@ -80,7 +90,7 @@
       font-size: 1em;
     }
 
-    /* Nederlandse statuskleuren */
+    /* Status kleuren NL */
     .Beschikbaar { background: #e0f8e0; color: #1b5e20; }
     .Bezet { background: #fde0e0; color: #b71c1c; }
     .Bezig\ met\ laden { background: #fff4cc; color: #795548; }
@@ -119,12 +129,15 @@
       animation: flash 0.8s ease;
     }
 
-    /* Extra mobielvriendelijk */
-    @media (max-width: 400px) {
+    /* Mobiel aanpassingen */
+    @media (max-width: 500px) {
+      .connector-row {
+        grid-template-columns: 1fr; /* stack op mobiel */
+        gap: 6px;
+      }
       .connector-icon { font-size: 1.3em; }
-      .status { font-size: 0.95em; padding: 5px; }
+      .status { font-size: 0.95em; padding: 5px; width: 100%; min-width: auto; }
     }
-
   </style>
 </head>
 <body>
@@ -162,11 +175,14 @@
           return `
             <div class="card">
               <div class="address">${s.address}</div>
-              <div class="grid">
+              
+              <div class="connector-row">
                 <div class="connector-icon">${connectorIcon} Connector 1</div>
                 <div class="status ${s.evse_1_status} ${ev1Flash}">${s.evse_1_status}</div>
                 <div class="timestamp">${s.evse_1_updated}</div>
+              </div>
 
+              <div class="connector-row">
                 <div class="connector-icon">${connectorIcon} Connector 2</div>
                 <div class="status ${s.evse_2_status} ${ev2Flash}">${s.evse_2_status}</div>
                 <div class="timestamp">${s.evse_2_updated}</div>
@@ -194,7 +210,7 @@
     }
 
     init();
-    setInterval(init, 60000); // iedere minuut verversen
+    setInterval(init, 60000); // herlaad elke minuut
   </script>
 </body>
 </html>
