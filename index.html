@@ -57,6 +57,26 @@
   <div id="stations">Laden...</div>
 
   <script>
+    function formatDate(isoString) {
+  if (!isoString || isoString === "Onbekend") return "Onbekend";
+  try {
+    const date = new Date(isoString);
+    const formatter = new Intl.DateTimeFormat('nl-NL', {
+      timeZone: 'Europe/Amsterdam',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+    return formatter.format(date);
+  } catch (e) {
+    console.error('Datumfout:', e);
+    return isoString;
+  }
+}
+
     const apiUrl = '/api/location.js'; // Vercel API endpoint
 
     function renderStatus(status) {
@@ -73,12 +93,13 @@
             <p>
               <span class="label">EVSE 1 status:</span> ${renderStatus(st.evse_1_status)}<br>
               <span class="label">Laatst bijgewerkt:</span>
-              <span class="timestamp">${st.evse_1_updated}</span>
+              <span class="timestamp">${formatDate(s.evse_1_updated)}</span>
             </p>
             <p>
               <span class="label">EVSE 2 status:</span> ${renderStatus(st.evse_2_status)}<br>
               <span class="label">Laatst bijgewerkt:</span>
-              <span class="timestamp">${st.evse_2_updated}</span>
+              <span class="timestamp">${formatDate(s.evse_2_updated)}</span>
+
             </p>
           </div>
         `).join('');
