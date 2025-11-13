@@ -48,11 +48,7 @@
       gap: 8px;
       font-weight: 500;
       color: #444;
-    }
-
-    .connector-icon svg {
-      width: 36px;
-      height: 36px;
+      font-size: 1.1em;
     }
 
     .status {
@@ -86,6 +82,13 @@
       border-radius: 6px;
     }
 
+    #lastUpdate {
+      text-align: center;
+      font-size: 0.9em;
+      color: #666;
+      margin-top: 20px;
+    }
+
     @media (max-width: 700px) {
       .grid {
         grid-template-columns: 1fr;
@@ -96,25 +99,10 @@
 <body>
   <h1>Shell Recharge Laadstations</h1>
   <div id="stations">Laden…</div>
+  <div id="lastUpdate"></div>
 
   <script>
-    /* SVG van een echte Type 2-stekker (7-polig patroon) */
-    const connectorIcon = `
-      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-        <!-- buitenring -->
-        <circle cx="32" cy="32" r="28" fill="#f2f6fc" stroke="#003366" stroke-width="3"/>
-        <!-- grote pennen boven -->
-        <circle cx="22" cy="22" r="5" fill="#003366"/>
-        <circle cx="42" cy="22" r="5" fill="#003366"/>
-        <!-- middelste rij -->
-        <circle cx="17" cy="36" r="4.5" fill="#003366"/>
-        <circle cx="27" cy="36" r="4.5" fill="#003366"/>
-        <circle cx="37" cy="36" r="4.5" fill="#003366"/>
-        <circle cx="47" cy="36" r="4.5" fill="#003366"/>
-        <!-- onderste pin -->
-        <circle cx="32" cy="48" r="3.8" fill="#66a3ff"/>
-      </svg>
-    `;
+    const connectorIcon = "🔌";
 
     async function init() {
       try {
@@ -142,6 +130,18 @@
             </div>
           </div>
         `).join('');
+
+        // Toon laatste update
+        const now = new Date();
+        const formatter = new Intl.DateTimeFormat('nl-NL', {
+          timeZone: 'Europe/Amsterdam',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        });
+        document.getElementById('lastUpdate').textContent =
+          `Laatst ververst om ${formatter.format(now)} — automatische update elke minuut.`;
+
       } catch (err) {
         console.error(err);
         document.getElementById('stations').innerHTML =
@@ -149,7 +149,10 @@
       }
     }
 
+    // eerste laadmoment
     init();
+    // herlaad elke minuut
+    setInterval(init, 60000);
   </script>
 </body>
 </html>
