@@ -9,21 +9,6 @@ export default async function handler(req, res) {
     },
   };
 
-  // Datum formatter in Nederlandse tijd
-  function formatDateAmsterdam(isoString) {
-    if (!isoString) return "Onbekend";
-    try {
-      const date = new Date(isoString);
-      return new Intl.DateTimeFormat('nl-NL', {
-        timeZone: 'Europe/Amsterdam',
-        dateStyle: 'medium',
-        timeStyle: 'short'
-      }).format(date);
-    } catch {
-      return isoString;
-    }
-  }
-
   // Zet status om naar 1 = beschikbaar, 0 = bezet/onbeschikbaar
   function statusToNumber(status) {
     if (!status) return 0;
@@ -36,25 +21,12 @@ export default async function handler(req, res) {
     if (!response.ok) throw new Error(`Fout bij ophalen locatie ${id}: ${response.status}`);
     const loc = await response.json();
     const evses = loc.evses || [];
-    const address = loc.address || {};
 
     // Tel het totaal aantal beschikbare laadpunten
     const available_count = evses.reduce((sum, evse) => sum + statusToNumber(evse.status), 0);
 
-    // Meest recente update van alle EVSE's
-    const last_updated = formatDateAmsterdam(
-      evses.map(e => e.updated)
-           .filter(Boolean)
-           .sort((a, b) => new Date(b) - new Date(a))[0] // meest recente update
-    );
-
-    // JSON output geschikt voor Complicated
-    res.status(200).json({
-      id,
-      address: address.streetAndNumber || "Onbekend",
-      available_count,
-      last_updated
-    });
+    // Alleen de variabele die Complicated kan gebruiken
+    res.status(200).json({ available_count });
 
   } catch (error) {
     console.error('Fout in API-functie:', error);
