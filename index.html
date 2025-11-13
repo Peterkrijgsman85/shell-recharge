@@ -2,17 +2,18 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8" />
-  <title>Shell Recharge Locatie</title>
+  <title>Shell Recharge Locaties</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 40px; }
+    h1 { font-size: 1.4rem; }
     .card {
       background: #f9f9f9;
       padding: 20px;
       border-radius: 12px;
-      max-width: 500px;
+      max-width: 550px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
     }
-    h1 { font-size: 1.4rem; margin-bottom: 1rem; }
     .label { font-weight: bold; color: #444; }
     .status {
       padding: 6px 10px;
@@ -28,35 +29,39 @@
 <body>
 
   <h1>Shell Recharge Locatie-informatie</h1>
-
-  <div id="info" class="card">
-    <p>Laden...</p>
-  </div>
+  <div id="locations"></div>
 
   <script>
-    const id = 4452657;
-    const apiUrl = `/api/location?id=${id}`; // Werkt direct op Vercel
+    const apiUrl = "/api/locations"; // werkt automatisch op Vercel
+
+    function statusClass(status) {
+      if (status === "AVAILABLE") return "available";
+      if (status === "CHARGING") return "charging";
+      return "unavailable";
+    }
 
     fetch(apiUrl)
       .then(res => res.json())
-      .then(data => {
-        const statusClass = (status) => {
-          if (status === "AVAILABLE") return "available";
-          if (status === "CHARGING") return "charging";
-          return "unavailable";
-        };
+      .then(locations => {
+        const container = document.getElementById("locations");
 
-        document.getElementById("info").innerHTML = `
-          <p><span class="label">Naam:</span> ${data.name}</p>
-          <p><span class="label">EVSE 1 status:</span> 
-             <span class="status ${statusClass(data.evse_1_status)}">${data.evse_1_status}</span></p>
-          <p><span class="label">EVSE 2 status:</span> 
-             <span class="status ${statusClass(data.evse_2_status)}">${data.evse_2_status}</span></p>
-        `;
+        container.innerHTML = locations.map(loc => `
+          <div class="card">
+            <p><span class="label">Naam:</span> ${loc.name}</p>
+            <p><span class="label">EVSE 1 status:</span> 
+              <span class="status ${statusClass(loc.evse_1_status)}">${loc.evse_1_status}</span>
+              <br><span class="label">Laatst bijgewerkt:</span> ${loc.evse_1_updated}
+            </p>
+            <p><span class="label">EVSE 2 status:</span> 
+              <span class="status ${statusClass(loc.evse_2_status)}">${loc.evse_2_status}</span>
+              <br><span class="label">Laatst bijgewerkt:</span> ${loc.evse_2_updated}
+            </p>
+          </div>
+        `).join("");
       })
       .catch(err => {
         console.error(err);
-        document.getElementById("info").textContent =
+        document.getElementById("locations").textContent =
           "Kon de locatiegegevens niet laden.";
       });
   </script>
