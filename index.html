@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Shell Recharge Locatie</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 40px; }
@@ -9,11 +9,20 @@
       background: #f9f9f9;
       padding: 20px;
       border-radius: 12px;
-      max-width: 400px;
+      max-width: 500px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    h1 { font-size: 1.4rem; }
-    .label { font-weight: bold; }
+    h1 { font-size: 1.4rem; margin-bottom: 1rem; }
+    .label { font-weight: bold; color: #444; }
+    .status {
+      padding: 6px 10px;
+      border-radius: 8px;
+      display: inline-block;
+      margin-top: 4px;
+    }
+    .available { background: #c8f7c5; }
+    .charging { background: #fbe7a1; }
+    .unavailable { background: #f8c0c0; }
   </style>
 </head>
 <body>
@@ -26,15 +35,23 @@
 
   <script>
     const id = 4452657;
-    // Gebruik de relatieve API-route (werkt automatisch op Vercel)
-    const apiUrl = `/api/location?id=${id}`;
+    const apiUrl = `/api/location?id=${id}`; // Werkt direct op Vercel
 
     fetch(apiUrl)
       .then(res => res.json())
       .then(data => {
+        const statusClass = (status) => {
+          if (status === "AVAILABLE") return "available";
+          if (status === "CHARGING") return "charging";
+          return "unavailable";
+        };
+
         document.getElementById("info").innerHTML = `
           <p><span class="label">Naam:</span> ${data.name}</p>
-          <p><span class="label">UID:</span> ${data.uid}</p>
+          <p><span class="label">EVSE 1 status:</span> 
+             <span class="status ${statusClass(data.evse_1_status)}">${data.evse_1_status}</span></p>
+          <p><span class="label">EVSE 2 status:</span> 
+             <span class="status ${statusClass(data.evse_2_status)}">${data.evse_2_status}</span></p>
         `;
       })
       .catch(err => {
