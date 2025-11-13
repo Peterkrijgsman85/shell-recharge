@@ -17,11 +17,25 @@ export default async function handler(req, res) {
       return new Intl.DateTimeFormat('nl-NL', {
         timeZone: 'Europe/Amsterdam',
         dateStyle: 'medium',
-        timeStyle: 'medium'
+        timeStyle: 'short'
       }).format(date);
     } catch {
       return isoString;
     }
+  }
+
+  // Vertaal statuswaarden naar NL
+  function translateStatus(status) {
+    if (!status) return "Onbekend";
+    const map = {
+      AVAILABLE: "Beschikbaar",
+      OCCUPIED: "Bezet",
+      CHARGING: "Bezig met laden",
+      UNAVAILABLE: "Niet beschikbaar",
+      OUTOFORDER: "Defect",
+      UNKNOWN: "Onbekend"
+    };
+    return map[status.toUpperCase()] || status;
   }
 
   try {
@@ -35,8 +49,8 @@ export default async function handler(req, res) {
       return {
         id,
         address: address.streetAndNumber || "Onbekend",
-        evse_1_status: evses[0]?.status || "Onbekend",
-        evse_2_status: evses[1]?.status || "Onbekend",
+        evse_1_status: translateStatus(evses[0]?.status),
+        evse_2_status: translateStatus(evses[1]?.status),
         evse_1_updated: formatDateAmsterdam(evses[0]?.updated),
         evse_2_updated: formatDateAmsterdam(evses[1]?.updated)
       };
