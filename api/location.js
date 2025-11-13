@@ -19,7 +19,7 @@ export default async function handler(req, res) {
       const evses = loc.evses || [];
       return {
         id: ids[i],
-        name: loc.name,
+        name: loc.addres.streetAndNumber,
         evse_1_status: evses[0]?.status || "Onbekend",
         evse_2_status: evses[1]?.status || "Onbekend",
         evse_1_updated: evses[0]?.updated || "Onbekend",
