@@ -45,15 +45,14 @@
     .connector-icon {
       display: flex;
       align-items: center;
-      justify-content: flex-start;
       gap: 8px;
       font-weight: 500;
       color: #444;
     }
 
     .connector-icon svg {
-      width: 28px;
-      height: 28px;
+      width: 36px;
+      height: 36px;
     }
 
     .status {
@@ -99,17 +98,21 @@
   <div id="stations">Laden…</div>
 
   <script>
+    /* SVG van een echte Type 2-stekker (7-polig patroon) */
     const connectorIcon = `
       <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="32" cy="32" r="30" fill="#e0ecf9" stroke="#003366" stroke-width="3"/>
-        <circle cx="32" cy="22" r="5" fill="#003366"/>
-        <circle cx="22" cy="32" r="5" fill="#003366"/>
-        <circle cx="42" cy="32" r="5" fill="#003366"/>
-        <circle cx="32" cy="42" r="5" fill="#003366"/>
-        <circle cx="26" cy="26" r="2" fill="#66a3ff"/>
-        <circle cx="38" cy="26" r="2" fill="#66a3ff"/>
-        <circle cx="26" cy="38" r="2" fill="#66a3ff"/>
-        <circle cx="38" cy="38" r="2" fill="#66a3ff"/>
+        <!-- buitenring -->
+        <circle cx="32" cy="32" r="28" fill="#f2f6fc" stroke="#003366" stroke-width="3"/>
+        <!-- grote pennen boven -->
+        <circle cx="22" cy="22" r="5" fill="#003366"/>
+        <circle cx="42" cy="22" r="5" fill="#003366"/>
+        <!-- middelste rij -->
+        <circle cx="17" cy="36" r="4.5" fill="#003366"/>
+        <circle cx="27" cy="36" r="4.5" fill="#003366"/>
+        <circle cx="37" cy="36" r="4.5" fill="#003366"/>
+        <circle cx="47" cy="36" r="4.5" fill="#003366"/>
+        <!-- onderste pin -->
+        <circle cx="32" cy="48" r="3.8" fill="#66a3ff"/>
       </svg>
     `;
 
