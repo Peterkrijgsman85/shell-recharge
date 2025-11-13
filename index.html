@@ -6,14 +6,29 @@
   <style>
     body { font-family: Arial, sans-serif; margin: 40px; background:#f7f8fa; }
     h1 { color:#003366; }
-    .card { background:#fff; padding:18px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.08); margin-bottom:16px; max-width:800px;}
-    .label { font-weight:normal; }
+
+    .card {
+      background:#fff;
+      padding:18px;
+      border-radius:10px;
+      box-shadow:0 2px 6px rgba(0,0,0,0.08);
+      margin-bottom:16px;
+      max-width:800px;
+    }
+
+    .label { font-weight:bold; }
+
+    /* Statuskleuren in het Nederlands */
     .status { padding:6px 10px; border-radius:6px; display:inline-block; margin-top:6px; font-weight:bold; }
-    .AVAILABLE { background:#c8f7c5; color:#1b5e20; }
-    .CHARGING { background:#fbe7a1; color:#795548; }
-    .UNAVAILABLE, .UNKNOWN, .OUTOFORDER { background:#f8c0c0; color:#b71c1c; }
+    .Beschikbaar { background:#c8f7c5; color:#1b5e20; }        /* Groen */
+    .Bezet { background:#f8c0c0; color:#b71c1c; }              /* Rood */
+    .Bezig\ met\ laden { background:#fbe7a1; color:#795548; }  /* Geel */
+    .Niet\ beschikbaar { background:#ddd; color:#555; }         /* Grijs */
+    .Defect { background:#e6b0b0; color:#7b0000; }              /* Donkerrood */
+    .Onbekend { background:#ccc; color:#333; }                  /* Lichtgrijs */
+
     .error { color:#b71c1c; font-weight:bold; }
-    .timestamp { color:#555; font-size:0.9em; font-weight:bold; }
+    .timestamp { color:#555; font-size:0.9em; }
   </style>
 </head>
 <body>
@@ -34,11 +49,11 @@
         const container = document.getElementById('stations');
         container.innerHTML = stations.map(s => `
           <div class="card">
-            <div><span class="label">Locatie:</span> ${s.address}</div>
-            <div><span class="label">Poort 1:</span> <span class="status ${s.evse_1_status}">${s.evse_1_status}</span></div>
-            <div><span class="label">Laatst bijgewerkt:</span> <span class="timestamp">${s.evse_1_updated}</span></div>
-            <div style="margin-top:8px;"><span class="label">Poort 2:</span> <span class="status ${s.evse_2_status}">${s.evse_2_status}</span></div>
-            <div><span class="label">Laatst bijgewerkt:</span> <span class="timestamp">${s.evse_2_updated}</span></div>
+            <div><span class="label">Adres:</span> ${s.address}</div>
+            <div><span class="label">EVSE 1 status:</span> <span class="status ${s.evse_1_status}">${s.evse_1_status}</span></div>
+            <div><span class="label">EVSE 1 laatst bijgewerkt:</span> <span class="timestamp">${s.evse_1_updated}</span></div>
+            <div style="margin-top:8px;"><span class="label">EVSE 2 status:</span> <span class="status ${s.evse_2_status}">${s.evse_2_status}</span></div>
+            <div><span class="label">EVSE 2 laatst bijgewerkt:</span> <span class="timestamp">${s.evse_2_updated}</span></div>
           </div>
         `).join('');
       } catch (err) {
