@@ -20,7 +20,7 @@
 
     .card {
       background: #fff;
-      padding: 20px 24px;
+      padding: 22px 26px;
       border-radius: 12px;
       box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
       margin-bottom: 20px;
@@ -30,22 +30,30 @@
       font-size: 1.2em;
       font-weight: 600;
       color: #002b5c;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 10px 20px;
+      gap: 12px 20px;
       align-items: center;
       border-top: 1px solid #eee;
-      padding-top: 10px;
-      margin-top: 8px;
+      padding-top: 14px;
     }
 
-    .label {
+    .connector-icon {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
       font-weight: 500;
-      color: #555;
+      color: #444;
+    }
+
+    .connector-icon svg {
+      width: 28px;
+      height: 28px;
     }
 
     .status {
@@ -91,6 +99,20 @@
   <div id="stations">Laden…</div>
 
   <script>
+    const connectorIcon = `
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="30" fill="#e0ecf9" stroke="#003366" stroke-width="3"/>
+        <circle cx="32" cy="22" r="5" fill="#003366"/>
+        <circle cx="22" cy="32" r="5" fill="#003366"/>
+        <circle cx="42" cy="32" r="5" fill="#003366"/>
+        <circle cx="32" cy="42" r="5" fill="#003366"/>
+        <circle cx="26" cy="26" r="2" fill="#66a3ff"/>
+        <circle cx="38" cy="26" r="2" fill="#66a3ff"/>
+        <circle cx="26" cy="38" r="2" fill="#66a3ff"/>
+        <circle cx="38" cy="38" r="2" fill="#66a3ff"/>
+      </svg>
+    `;
+
     async function init() {
       try {
         const res = await fetch('/api/location.js');
@@ -107,11 +129,11 @@
           <div class="card">
             <div class="address">${s.address}</div>
             <div class="grid">
-              <div class="label">Type 2 Connector 1</div>
+              <div class="connector-icon">${connectorIcon} Connector 1</div>
               <div class="status ${s.evse_1_status}">${s.evse_1_status}</div>
               <div class="timestamp">${s.evse_1_updated}</div>
 
-              <div class="label">Type 2 Connector 2</div>
+              <div class="connector-icon">${connectorIcon} Connector 2</div>
               <div class="status ${s.evse_2_status}">${s.evse_2_status}</div>
               <div class="timestamp">${s.evse_2_updated}</div>
             </div>
