@@ -1,35 +1,50 @@
+// api/locations.js
 export default async function handler(req, res) {
-  // Vaste laadstations
   const ids = [5036306, 4452657, 3302883];
 
-  try {
-    const responses = await Promise.all(
-      ids.map(id =>
-        fetch(`https://ui-map.shellrecharge.com/api/map/v2/locations/${id}`)
-      )
-    );
+  const fetchOptions = {
+    headers: {
+      'User-Agent': 'VercelServer/1.0 (+https://vercel.com)',
+      'Referer': 'https://ui-map.shellrecharge.com/'
+    },
+  };
 
-    if (!responses.every(r => r.ok)) {
-      return res.status(500).json({ error: "Een of meer API-aanvragen mislukt" });
+  // Datum formatter in Nederlandse tijd
+  function formatDateAmsterdam(isoString) {
+    if (!isoString) return "Onbekend";
+    try {
+      const date = new Date(isoString);
+      return new Intl.DateTimeFormat('nl-NL', {
+        timeZone: 'Europe/Amsterdam',
+        dateStyle: 'medium',
+        timeStyle: 'medium'
+      }).format(date);
+    } catch {
+      return isoString;
     }
+  }
 
-    const data = await Promise.all(responses.map(r => r.json()));
-
-    const cleaned = data.map((loc, i) => {
+  try {
+    const results = await Promise.all(ids.map(async id => {
+      const response = await fetch(`https://ui-map.shellrecharge.com/api/map/v2/locations/${id}`, fetchOptions);
+      if (!response.ok) throw new Error(`Fout bij ophalen locatie ${id}: ${response.status}`);
+      const loc = await response.json();
       const evses = loc.evses || [];
+      const address = loc.address || {};
+
       return {
-        id: ids[i],
-        name: loc.address.streetAndNumber,
+        id,
+        address: address.streetandnumber || "Onbekend",
         evse_1_status: evses[0]?.status || "Onbekend",
         evse_2_status: evses[1]?.status || "Onbekend",
-        evse_1_updated: evses[0]?.updated || "Onbekend",
-        evse_2_updated: evses[1]?.updated || "Onbekend"
+        evse_1_updated: formatDateAmsterdam(evses[0]?.updated),
+        evse_2_updated: formatDateAmsterdam(evses[1]?.updated)
       };
-    });
+    }));
 
-    res.status(200).json(cleaned);
+    res.status(200).json(results);
   } catch (error) {
-    console.error("Fout bij ophalen Shell API:", error);
-    res.status(500).json({ error: "Interne serverfout" });
+    console.error('Fout in API-functie:', error);
+    res.status(500).json({ error: 'Kon data niet ophalen', message: error.message });
   }
 }
