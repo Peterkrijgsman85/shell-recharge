@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  const { id } = req.query; // bijv. ?id=4452657
+  const { id } = req.query;
 
   try {
     const response = await fetch(
@@ -12,10 +12,13 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    // Alleen de velden die we nodig hebben
+    // Controleer of er evses-data aanwezig is
+    const evses = data.evses || [];
+
     res.status(200).json({
       name: data.name,
-      uid: data.uid
+      evse_1_status: evses[0]?.status || "Onbekend",
+      evse_2_status: evses[1]?.status || "Onbekend"
     });
   } catch (error) {
     console.error(error);
