@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Essentieel voor mobiel/retina -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Shell Recharge Laadstations ⚡</title>
 
   <!-- Emoji favicon -->
@@ -16,9 +16,14 @@
       color: #333;
       margin: 0;
       padding: 5px;
+      display: flex;
+      justify-content: center; /* horizontaal centreren */
+    }
+
+    /* Gecentreerde container */
+    .container {
       width: 100%;
-      max-width: 600px; 
-      box-sizing: border-box;
+      max-width: 600px;
     }
 
     h1 {
@@ -141,9 +146,11 @@
   </style>
 </head>
 <body>
-  <h1><span>⚡</span>Shell Recharge Laadstations</h1>
-  <div id="stations">Laden…</div>
-  <div id="lastUpdate"></div>
+  <div class="container">
+    <h1><span>⚡</span>Shell Recharge Laadstations</h1>
+    <div id="stations">Laden…</div>
+    <div id="lastUpdate"></div>
+  </div>
 
   <script>
     const connectorIcon = "🔌";
