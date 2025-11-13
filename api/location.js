@@ -34,7 +34,7 @@ export default async function handler(req, res) {
 
       return {
         id,
-        address: address.streetandnumber || "Onbekend",
+        address: address.streetAndNumber || "Onbekend",
         evse_1_status: evses[0]?.status || "Onbekend",
         evse_2_status: evses[1]?.status || "Onbekend",
         evse_1_updated: formatDateAmsterdam(evses[0]?.updated),
