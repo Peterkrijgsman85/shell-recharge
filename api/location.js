@@ -22,8 +22,8 @@ export default async function handler(req, res) {
         name: loc.name,
         evse_1_status: evses[0]?.status || "Onbekend",
         evse_2_status: evses[1]?.status || "Onbekend",
-        evse_1_updated: evses[0]?.connectors?.[0]?.updated || "Onbekend",
-        evse_2_updated: evses[1]?.connectors?.[1]?.updated || "Onbekend"
+        evse_1_updated: evses[0]?.updated || "Onbekend",
+        evse_2_updated: evses[1]?.updated || "Onbekend"
       };
     });
 
