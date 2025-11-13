@@ -4,17 +4,28 @@
   <meta charset="UTF-8" />
   <title>Shell Recharge Laadstations</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 40px; background: #f7f8fa; }
-    h1 { font-size: 1.6rem; margin-bottom: 20px; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #f7f8fa;
+    }
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 30px;
+      color: #003366;
+    }
     .card {
       background: #fff;
       padding: 20px;
       border-radius: 12px;
       max-width: 600px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      margin-bottom: 25px;
     }
-    .label { font-weight: bold; color: #333; }
+    .label {
+      font-weight: bold;
+      color: #333;
+    }
     .status {
       padding: 6px 10px;
       border-radius: 8px;
@@ -22,19 +33,31 @@
       margin-top: 4px;
       font-weight: bold;
     }
-    .AVAILABLE { background: #c8f7c5; color: #1b5e20; }
-    .CHARGING { background: #fbe7a1; color: #795548; }
-    .UNAVAILABLE { background: #f8c0c0; color: #b71c1c; }
-    .timestamp { color: #555; font-size: 0.9em; }
+    .AVAILABLE {
+      background: #c8f7c5;
+      color: #1b5e20;
+    }
+    .CHARGING {
+      background: #fbe7a1;
+      color: #795548;
+    }
+    .OUTOFORDER, .UNKNOWN {
+      background: #f8c0c0;
+      color: #b71c1c;
+    }
+    .timestamp {
+      color: #555;
+      font-size: 0.9em;
+    }
   </style>
 </head>
 <body>
 
   <h1>Shell Recharge Laadstations</h1>
-  <div id="stations"></div>
+  <div id="stations">Laden...</div>
 
   <script>
-    const apiUrl = '/api/locations'; // draait op dezelfde Vercel-host
+    const apiUrl = '/api/locations'; // Vercel API endpoint
 
     function renderStatus(status) {
       return `<span class="status ${status}">${status}</span>`;
@@ -49,12 +72,12 @@
             <p><span class="label">Naam:</span> ${st.name}</p>
             <p>
               <span class="label">EVSE 1 status:</span> ${renderStatus(st.evse_1_status)}<br>
-              <span class="label">Laatst bijgewerkt:</span> 
+              <span class="label">Laatst bijgewerkt:</span>
               <span class="timestamp">${st.evse_1_updated}</span>
             </p>
             <p>
               <span class="label">EVSE 2 status:</span> ${renderStatus(st.evse_2_status)}<br>
-              <span class="label">Laatst bijgewerkt:</span> 
+              <span class="label">Laatst bijgewerkt:</span>
               <span class="timestamp">${st.evse_2_updated}</span>
             </p>
           </div>
@@ -62,7 +85,8 @@
       })
       .catch(err => {
         console.error(err);
-        document.getElementById('stations').textContent = 'Fout bij laden van data.';
+        document.getElementById('stations').textContent =
+          'Kon de gegevens niet laden.';
       });
   </script>
 
